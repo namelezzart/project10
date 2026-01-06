@@ -5,6 +5,9 @@ namespace App\Http\Controllers\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\StorePostRequest;
+use App\Models\Post;
+use App\Models\User;
+use Carbon\Carbon;
 
 use function Laravel\Prompts\alert;
 
@@ -31,11 +34,22 @@ class PostController extends Controller
         $validated = validate($request->all(), [
             'title' => ['required','string', 'max:100'],
             'content' => ['required','string', 'max:10000'],
+            'published_at' => ['nullable','string', 'date'],
+            'published' => ['nullable', 'boolean'],
         ]);
 
-        dd($validated);  
+        $post = Post::query()->firstOrCreate([
+            'user_id' => User::query()->value('id'),
+            'title' => $validated['title']
+        ], [
+            'content' => $validated['content'],
+            'published_at' => new Carbon($validated['published_at'] ?? null),
+            'published' => $validated['published'] ?? false,
+        ]);
 
-        return redirect()->route('user.posts.show', 123); 
+        dd($post->toArray());
+
+        return redirect()->route('user.posts.show',  123); 
     }
     public function show($post)
     {

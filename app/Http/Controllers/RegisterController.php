@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
+use App\Models\User;
+
 
 class RegisterController extends Controller
 {
@@ -19,14 +20,14 @@ class RegisterController extends Controller
             'agreement' => ['accepted'],
         ]);
 
-        $user = new User;
-        $user->name = $validated['name'];
-        $user->email = $validated['email'];
-        $user->password = $validated['password'];
+        $user = User::query()->create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => bcrypt($validated['password']),
+        ]);
+
         $user->save();
 
-        dd($user);
-         
         return redirect()->route('user');
     }
 }
