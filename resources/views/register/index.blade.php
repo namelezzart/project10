@@ -17,12 +17,14 @@
         </x-card_header>
 
         <x-card_body>
+            <x-errors />
+
             <x-form action="{{ route('register.store') }}" method="POST">
                 <x-form_item>
                     <x-label required> {{ __('Name') }}</x-label>
                     <x-input name="name" autofocus/>
                 </x-form_item>
-
+ 
                 <x-form_item>
                     <x-label required> {{ __('Email') }}</x-label>
                     <x-input type="email" name="email" />
