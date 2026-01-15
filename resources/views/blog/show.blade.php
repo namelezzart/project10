@@ -4,7 +4,7 @@
 
 @section('main.content')
     <x-title>
-        {{ __($post->title)}}
+        {{ $post->title }}
 
         <x-slot name="link">
             <div class="mb-2">
@@ -13,7 +13,7 @@
                 </a>
             </div>
         </x-slot>
-    </x-title>
+    </x-title> 
 
     {!! $post->content !!}
 @endsection

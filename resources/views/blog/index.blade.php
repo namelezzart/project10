@@ -10,7 +10,7 @@
 @include('blog.filter') 
 
     <div class="row">
-        @if (empty($posts))
+        @if ($posts->isEmpty())
             {{ __('Empty post') }}
         @else
             @foreach ($posts as $post)
@@ -18,6 +18,8 @@
                     <x-post.card :post="$post"/>
                 </div>
             @endforeach
+            
+            {{ $posts->links()}}
         @endif
     </div>
 @endsection

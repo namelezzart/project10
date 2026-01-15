@@ -15,13 +15,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        $post = (object) [
-            'id' => '1',
-            'title' => 'Lorem ipsum dolor sit amet.',
-            'content' => 'Lorem ipsum <strong>dolor</strong> sit amet consectetur, adipisicing elit. Quia, voluptatem.',
-        ];
-
-        $posts = array_fill(0, 10, $post);
+        $posts = Post::query()->paginate(12);
 
         return view('user.posts.index', compact('posts'));
     }
@@ -58,6 +52,16 @@ class PostController extends Controller
             'title' => 'Lorem ipsum dolor sit amet.',
             'content' => 'Lorem ipsum <strong>dolor</strong> sit amet consectetur, adipisicing elit. Quia, voluptatem.',
         ];
+
+        // for ($i = 0; $i < 99; $i++) {
+        //     Post::query()->create([
+        //         'user_id' => User::query()->value('id'),
+        //         'title' => fake()->sentence(),
+        //         'content' => fake()->paragraph(),
+        //         'published' => true,
+        //         'published_at' => fake()->dateTimeBetween(now()->subYear(), now()),
+        //     ]);
+        // }
 
         return view('user.posts.show', compact('post')); 
     }

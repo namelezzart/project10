@@ -7,7 +7,9 @@
         </h2>
 
         <p class="small text-muted">
-            {{ now()->format('d.m.Y H:i:s') }}
+            {{ $post->published_at?->diffForHumans() }}
         </p>
+
+        {{ $post->id }}
     </x-card_body>
 </x-card>

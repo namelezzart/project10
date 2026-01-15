@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 use function Laravel\Prompts\search;
@@ -10,53 +13,39 @@ class BlogController extends Controller
 {
     public function index(Request $request)
     {
-        $search = $request->input('search');
-        $category_id = $request->input('category_id');
+        $validated = $request->validate([
+            'search' => ['nullable', 'string', 'max:50'],
+            'from_date' => ['nullable', 'date', 'max:50'],
+            'to_date' => ['nullable', 'date', 'max:50', 'after:from_date'],
+        ]);
+         
+        $query = Post::query()
+            ->where('published', true)
+            ->whereNotNull('published_at');
 
-        // dd($search, $category_id);
+        if ($search = $validated['search'] ?? null) {
+            $query->where('title', 'ilike', "%{$search}%");
+        }
+        if ($fromDate = $validated['from_date'] ?? null) {
+            $query->where('published_at', '>=', new Carbon($fromDate));
+        }
+        if ($toDate = $validated['to_date'] ?? null) {
+            $query->where('published_at', '<=', new Carbon($toDate));
+        }
 
-        $post = (object) [
-            'id' => 12,
-            'title' => 'Lorem ipsum dolor sit amet.',
-            'content' => 'Lorem ipsum <strong>dolor</strong> sit amet consectetur, adipisicing elit. Quia, voluptatem.',
-            'category_id' => 1,
-        ];
+        $posts = $query->latest('published_at') 
+            ->paginate(12);
 
-        $posts = array_fill(0, 10, $post);
-
-        $posts = array_filter($posts, function($post) use($search, $category_id) {
-             if($search && ! str_contains(strtolower($post->title), strtolower($search)))  {
-                return false;
-             }
-
-             if($category_id && $post->category_id != $category_id)  {
-                return false;
-             }
-        
-        return true;
-        });
-
-        $categories = [
-            null => __('All categories'),
-            1 => __('First category'),
-            2 => __('Second category')
-        ];
-
-        return view('blog.index', compact('posts', 'categories'));
+        return view('blog.index', compact('posts'));
     }
 
-    public function show($post)
-    { 
-        $post = (object) [
-            'id' => '1',
-            'title' => 'Lorem ipsum dolor sit amet.',
-            'content' => 'Lorem ipsum <strong>dolor</strong> sit amet consectetur, adipisicing elit. Quia, voluptatem.',
-        ];
+    public function show(Request $request, Post $post)
+    {   
         return view('blog.show', compact('post'));
     }
 
     public function like($post)
-    {
+    { 
         return 'Лайк + 1';
     }
 }
