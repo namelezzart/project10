@@ -14,13 +14,7 @@
     </x-form_item>
 
     <x-form_item>
-        <x-label required>{{ __('Published at') }}</x-label>
-        <x-input name="published_at" placeholder="dd.mm.yyyy"/>
-        <x-error name="published_at" />
-    </x-form_item>
-
-    <x-form_item>
-        <x-checkbox name="published">
+        <x-checkbox name="published" :checked="old('published', $post->published ?? false)">
             Published
         </x-checkbox>
     </x-form_item>
