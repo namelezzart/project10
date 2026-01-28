@@ -1,3 +1,3 @@
-<div class="m-0">
+<h4 class="m-0 fw-semibold">
     {{ $slot }}
-</div>
+</h4>

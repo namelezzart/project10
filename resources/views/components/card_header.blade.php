@@ -1,7 +1,7 @@
-<div class="card-body">
-    <div class="d-flex justify-content-between">
+<div class="card-header">
+    <div class="d-flex justify-content-between align-items-center">
         <div>
-            <h4>{{ $slot }}</h4>
+            {{ $slot }}
         </div>
 
         @isset($right)
