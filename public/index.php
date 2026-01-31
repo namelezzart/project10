@@ -1,5 +1,4 @@
 <?php
-die('BOOT_OK');
 
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
