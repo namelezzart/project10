@@ -5,6 +5,9 @@ use App\Http\Controllers\Posts\CommentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 
+Route::get('/', function () {
+    return response()->json(['status' => 'ok']);
+});
 // Главная страница
 Route::get('/', function () {
     return view('home.index');
