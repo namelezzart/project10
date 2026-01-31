@@ -2,96 +2,109 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Post\StorePostRequest;
 use App\Models\Post;
-use App\Models\User;
-use Carbon\Carbon;
-
-use function Laravel\Prompts\alert;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::query()->paginate(12);
-
+        $posts = Post::where('user_id', auth()->id())
+                    ->latest()
+                    ->paginate(10);
         return view('user.posts.index', compact('posts'));
     }
-     public function create()
+    
+    public function create()
     {
         return view('user.posts.create');
     }
+    
     public function store(Request $request)
-    { 
-        $validated = validate($request->all(), [
-            'title' => ['required','string', 'max:100'],
-            'content' => ['required','string', 'max:10000'],
-            'published_at' => ['nullable','string', 'date'],
-            'published' => ['nullable', 'boolean'],
-        ]);
-
-        $post = Post::query()->firstOrCreate([
-            'user_id' => User::query()->value('id'),
-            'title' => $validated['title']
-        ], [
-            'content' => $validated['content'],
-            'published_at' => new Carbon($validated['published_at'] ?? null),
-            'published' => $validated['published'] ?? false,
-        ]);
-
-        dd($post->toArray());
-
-        return redirect()->route('user.posts.show',  123); 
-    }
-    public function show($post)
     {
-        $post = (object) [
-            'id' => '1',
-            'title' => 'Lorem ipsum dolor sit amet.',
-            'content' => 'Lorem ipsum <strong>dolor</strong> sit amet consectetur, adipisicing elit. Quia, voluptatem.',
-        ];
-
-        // for ($i = 0; $i < 99; $i++) {
-        //     Post::query()->create([
-        //         'user_id' => User::query()->value('id'),
-        //         'title' => fake()->sentence(),
-        //         'content' => fake()->paragraph(),
-        //         'published' => true,
-        //         'published_at' => fake()->dateTimeBetween(now()->subYear(), now()),
-        //     ]);
-        // }
-
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'content' => 'required',
+            'published' => 'boolean',
+        ]);
+        
+        $validated['user_id'] = auth()->id();
+        
+        // Устанавливаем дату публикации
+        if (isset($validated['published']) && $validated['published']) {
+            $validated['published_at'] = now();
+        } else {
+            $validated['published'] = false;
+            $validated['published_at'] = null;
+        }
+        
+        Post::create($validated);
+        
+        return redirect()->route('user.posts')
+                        ->with('success', 'Пост успешно создан');
+    }
+    
+    public function show(Post $post)
+    {
         return view('user.posts.show', compact('post')); 
     }
-    public function edit($post)
+    
+    public function edit(Post $post)
     {
-        $post = (object) [
-            'id' => '1',
-            'title' => 'Lorem ipsum dolor sit amet.',
-            'content' => 'Lorem ipsum <strong>dolor</strong> sit amet consectetur, adipisicing elit. Quia, voluptatem.',
-        ];
-
+        if ($post->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         return view('user.posts.edit', compact('post'));
     }
-    public function update(Request $request, $post)
+    
+    public function update(Request $request, Post $post)
     {
-        $validated = validate($request->all(), [
-            'title' => ['required','string', 'max:100'],
-            'content' => ['required','string', 'max:10000'],
+        if ($post->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'content' => 'required',
+            'published' => 'boolean',
         ]);
-
-        dd($validated);
-
-        return redirect()->back();
+        
+        // Обновляем дату публикации
+        if (isset($validated['published']) && $validated['published']) {
+            // Если пост ранее не был опубликован, устанавливаем дату
+            if (!$post->published || !$post->published_at) {
+                $validated['published_at'] = now();
+            }
+        } else {
+            $validated['published'] = false;
+            $validated['published_at'] = null;
+        }
+        
+        $post->update($validated);
+        
+        return redirect()->route('user.posts')
+                        ->with('success', 'Пост успешно обновлён');
     }
-    public function delete($post)
+    
+    public function delete(Post $post)
     {
-        return redirect()->route('user.posts');
+        if ($post->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        
+        $post->delete();
+        
+        return redirect()->route('user.posts')
+                        ->with('success', 'Пост успешно удалён');
     }
-    public function like() 
+    
+    public function like(Request $request, Post $post)
     {
-         return 'Страница лайка поста';
-    }   
+        // Здесь реализуйте логику лайков
+        // Например, через отдельную таблицу likes
+        
+        return back()->with('success', 'Лайк добавлен');
+    }
 }

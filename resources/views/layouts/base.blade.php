@@ -194,6 +194,7 @@
             border: 2px solid transparent;
             position: relative;
             overflow: hidden;
+            z-index: 1;
         }
         
         .btn::before {
@@ -413,6 +414,8 @@
             backdrop-filter: blur(10px);
             border-bottom: 1px solid;
             transition: all 0.3s ease;
+            position: relative;
+            z-index: 1050;
         }
         
         [data-bs-theme="light"] .navbar-modern {
@@ -478,32 +481,44 @@
             color: #0d6efd;
         }
         
+        /* Dropdown container */
+        .nav-item.dropdown {
+            position: relative;
+            z-index: 1060;
+        }
+        
         .dropdown-modern {
             border-radius: 0.5rem;
             border: none;
             padding: 0.5rem 0;
             min-width: 200px;
+            margin-top: 0.5rem !important;
+            z-index: 1060 !important;
+            position: relative;
         }
         
         [data-bs-theme="light"] .dropdown-modern {
             background: #ffffff;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e9ecef;
         }
         
         [data-bs-theme="dark"] .dropdown-modern {
             background: #2b3035;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid #495057;
         }
         
         .dropdown-modern .dropdown-item {
             padding: 0.625rem 1.25rem;
             transition: all 0.3s ease;
             border-radius: 0.25rem;
-            margin: 0 0.5rem;
+            margin: 0.25rem 0.5rem;
+            width: calc(100% - 1rem);
         }
         
         .dropdown-modern .dropdown-item:hover {
-            transform: translateX(5px);
+            transform: translateX(3px);
         }
         
         [data-bs-theme="light"] .dropdown-modern .dropdown-item:hover {
@@ -514,8 +529,14 @@
             background-color: #373b3e;
         }
         
+        .dropdown-modern .dropdown-item:active {
+            background-color: #0d6efd;
+            color: white;
+        }
+        
         .dropdown-modern .dropdown-divider {
             margin: 0.5rem 0;
+            opacity: 0.5;
         }
         
         /* ========================================

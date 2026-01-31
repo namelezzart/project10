@@ -56,4 +56,17 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+
+    /**
+     * Получить посты пользователя
+     */
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
 }

@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\PostController;
 
-// Route::prefix('user')->middleware('auth', 'active')->group(function () {
-Route::prefix('user')->group(function () {
+// Маршруты постов (доступны только авторизованным)
+Route::prefix('user')->middleware('auth')->group(function () {
     Route::redirect('/', '/user/posts')->name('user');
     
     Route::get('/posts', [PostController::class, 'index'])->name('user.posts');

@@ -1,21 +1,21 @@
-<footer class="footer-modern">
+<footer class="footer-modern" style="padding-top: 0;">
     <div class="container">
-        <div class="row py-4">
+        <div class="row py-3">
             <!-- Левая колонка -->
-            <div class="col-md-4 mb-3 mb-md-0">
-                <h5 class="footer-brand">
+            <div class="col-md-4 mb-2 mb-md-0">
+                <h5 class="footer-brand mb-2">
                     <i class="bi bi-stars me-2"></i>
                     {{ config('app.name') }}
                 </h5>
-                <p class="text-muted small">
+                <p class="text-muted small mb-0">
                     Modern blog platform with beautiful design and powerful features.
                 </p>
             </div>
             
             <!-- Центральная колонка -->
-            <div class="col-md-4 mb-3 mb-md-0">
-                <h6 class="footer-heading">Quick Links</h6>
-                <ul class="list-unstyled footer-links">
+            <div class="col-md-4 mb-2 mb-md-0">
+                <h6 class="footer-heading mb-2">Quick Links</h6>
+                <ul class="list-unstyled footer-links mb-0">
                     <li>
                         <a href="{{ route('home') }}">
                             <i class="bi bi-house-door me-1"></i>
@@ -41,7 +41,7 @@
             
             <!-- Правая колонка -->
             <div class="col-md-4">
-                <h6 class="footer-heading">Connect</h6>
+                <h6 class="footer-heading mb-2">Connect</h6>
                 <div class="social-links">
                     <a href="#" class="social-link" aria-label="GitHub">
                         <i class="bi bi-github"></i>
@@ -60,7 +60,7 @@
         </div>
         
         <!-- Copyright -->
-        <div class="footer-bottom">
+        <div class="footer-bottom" style="margin-top: 0;">
             <div class="row">
                 <div class="col-12 text-center">
                     <p class="mb-0 text-muted small">

@@ -5,7 +5,7 @@
 @section('main.content')
     <!-- Header Section -->
     <div class="post-header mb-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
             <a href="{{ route('blog') }}" class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-arrow-left me-1"></i>
                 {{ __('Back to Blog') }}
@@ -46,23 +46,4 @@
     <article class="post-content">
         {!! $post->content !!}
     </article>
-    
-    <!-- Footer Section -->
-    <div class="post-footer mt-5 pt-4">
-        <div class="d-flex justify-content-between align-items-center">
-            <a href="{{ route('blog') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-2"></i>
-                {{ __('Back to Blog') }}
-            </a>
-            
-            @auth
-                @if(Auth::id() === $post->user_id)
-                    <a href="{{ route('user.posts.edit', $post) }}" class="btn btn-primary">
-                        <i class="bi bi-pencil me-2"></i>
-                        {{ __('Edit Post') }}
-                    </a>
-                @endif
-            @endauth
-        </div>
-    </div>
 @endsection

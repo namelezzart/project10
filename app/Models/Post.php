@@ -32,4 +32,12 @@ class Post extends Model
         return $this->published
             && $this->published_at;
     }
+
+    /**
+     * Получить автора поста
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
