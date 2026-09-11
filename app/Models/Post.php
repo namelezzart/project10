@@ -40,4 +40,24 @@ class Post extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Пользователи, поставившие лайк посту
+     */
+    public function likedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'post_likes')->withTimestamps();
+    }
+
+    /**
+     * Поставил ли указанный пользователь лайк этому посту
+     */
+    public function isLikedBy(?User $user): bool
+    {
+        if (! $user) {
+            return false;
+        }
+
+        return $this->likedByUsers()->where('user_id', $user->id)->exists();
+    }
 }
