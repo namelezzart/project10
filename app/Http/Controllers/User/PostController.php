@@ -102,9 +102,14 @@ class PostController extends Controller
     
     public function like(Request $request, Post $post)
     {
-        // Здесь реализуйте логику лайков
-        // Например, через отдельную таблицу likes
-        
-        return back()->with('success', 'Лайк добавлен');
+        $user = $request->user();
+
+        if ($post->isLikedBy($user)) {
+            $post->likedByUsers()->detach($user->id);
+        } else {
+            $post->likedByUsers()->syncWithoutDetaching([$user->id]);
+        }
+
+        return back()->with('success', 'Лайк обновлён');
     }
 }

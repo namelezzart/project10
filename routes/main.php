@@ -24,7 +24,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 
 Route::get('blog', [BlogController::class, 'index'])->name('blog');
 Route::get('blog/{post}', [BlogController::class, 'show'])->name('blog.show');
-Route::post('blog/{post}/like', [BlogController::class, 'like'])->name('blog.like');
+Route::post('blog/{post}/like', [BlogController::class, 'like'])->name('blog.like')->middleware('auth');
 
 //CRUD (create, read, update, delete)
 // Создает все стандартные маршруты, аргуметы в методе only создаст только заданные маршруты, вместо only except создает исключение

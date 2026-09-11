@@ -44,8 +44,19 @@ class BlogController extends Controller
         return view('blog.show', compact('post'));
     }
 
-    public function like($post)
-    { 
-        return 'Лайк + 1';
+    /**
+     * Переключение лайка от текущего пользователя (лайк/анлайк).
+     */
+    public function like(Request $request, Post $post)
+    {
+        $user = $request->user();
+
+        if ($post->isLikedBy($user)) {
+            $post->likedByUsers()->detach($user->id);
+        } else {
+            $post->likedByUsers()->syncWithoutDetaching([$user->id]);
+        }
+
+        return back();
     }
 }

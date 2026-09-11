@@ -40,6 +40,27 @@
                 </div>
             </div>
         </div>
+
+        <div class="d-flex align-items-center gap-2 mt-3">
+            @auth
+                @php $liked = $post->isLikedBy(auth()->user()); @endphp
+                <form action="{{ route('blog.like', $post) }}" method="post">
+                    @csrf
+                    <button type="submit" class="btn btn-sm {{ $liked ? 'btn-danger' : 'btn-outline-danger' }}">
+                        <i class="bi {{ $liked ? 'bi-heart-fill' : 'bi-heart' }} me-1"></i>
+                        {{ $liked ? __('Liked') : __('Like') }}
+                    </button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="btn btn-sm btn-outline-danger">
+                    <i class="bi bi-heart me-1"></i>
+                    {{ __('Log in to like') }}
+                </a>
+            @endauth
+            <span class="text-muted small">
+                {{ $post->likedByUsers()->count() }} {{ __('likes') }}
+            </span>
+        </div>
     </div>
 
     <!-- Content Section -->
