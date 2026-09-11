@@ -29,7 +29,10 @@
                     card.classList.toggle('is-center', isCenter);
                     card.style.width = size + 'px';
                     card.style.height = size + 'px';
-                    card.style.zIndex = isCenter ? '10' : '0';
+                    // Stack cards by distance from the center instead of a flat
+                    // 0/10 split, so a card sliding past another never flickers
+                    // underneath it mid-transition.
+                    card.style.zIndex = String(total - Math.abs(position));
 
                     const translateY = isCenter ? -65 : (position % 2 !== 0 ? 15 : -15);
                     const rotate = isCenter ? 0 : (position % 2 !== 0 ? 2.5 : -2.5);
@@ -49,6 +52,20 @@
                 if (steps === 0) {
                     return;
                 }
+
+                // Rotating the order shifts every card by `steps` slots except
+                // for the ones that wrap from one end of the list to the
+                // other - those would otherwise sweep all the way across the
+                // carousel as their transform transitions between two far-out
+                // positions. Snap those specific cards into place instantly.
+                const wrapped = steps > 0
+                    ? order.slice(0, steps)
+                    : order.slice(order.length + steps);
+
+                wrapped.forEach((card) => {
+                    card.style.transitionDuration = '0s';
+                });
+
                 if (steps > 0) {
                     for (let i = 0; i < steps; i++) {
                         order.push(order.shift());
@@ -59,6 +76,12 @@
                     }
                 }
                 render();
+
+                requestAnimationFrame(() => {
+                    wrapped.forEach((card) => {
+                        card.style.transitionDuration = '';
+                    });
+                });
             }
 
             function activate(card) {

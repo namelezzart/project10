@@ -146,6 +146,14 @@
         z-index: 20;
     }
 
+    @media (max-width: 639.98px) {
+        /* Touch devices swipe the carousel directly; the buttons are redundant
+           and eat into the already-tight vertical space on small screens. */
+        .post-stagger__controls {
+            display: none;
+        }
+    }
+
     .post-stagger__btn {
         display: flex;
         align-items: center;
