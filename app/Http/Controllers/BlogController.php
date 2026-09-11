@@ -33,10 +33,19 @@ class BlogController extends Controller
             $query->where('published_at', '<=', new Carbon($toDate));
         }
 
-        $posts = $query->latest('published_at') 
+        $posts = $query->latest('published_at')
             ->paginate(12);
 
-        return view('blog.index', compact('posts'));
+        $latestPosts = Post::query()
+            ->where('published', true)
+            ->whereNotNull('published_at')
+            ->with('user')
+            ->withCount('likedByUsers')
+            ->latest('published_at')
+            ->take(10)
+            ->get();
+
+        return view('blog.index', compact('posts', 'latestPosts'));
     }
 
     public function show(Request $request, Post $post)
