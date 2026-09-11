@@ -26,6 +26,6 @@ class AdminMiddleware
 
     protected function isAdmin(Request $request)
        {
-            return false;
+            return (bool) $request->user()?->admin;
        }
 }

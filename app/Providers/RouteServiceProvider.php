@@ -33,13 +33,13 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
 
-            Route::middleware('web')
-                ->namespace($this -> namespace)
-                ->group(function () {
-                    require_once  base_path('routes/main.php');
-                    require_once  base_path('routes/admin.php');
-                    require_once  base_path('routes/user.php');
-                });
+            // Каждый файл маршрутов подключается через ->group(path), а не require_once:
+            // require_once подключает файл только один раз за весь PHP-процесс, а RouteServiceProvider::boot()
+            // выполняется заново при каждом пересоздании приложения (например, в каждом Feature-тесте) —
+            // с require_once все маршруты из этих файлов регистрировались бы только в первом созданном приложении.
+            Route::middleware('web')->group(base_path('routes/main.php'));
+            Route::middleware('web')->group(base_path('routes/admin.php'));
+            Route::middleware('web')->group(base_path('routes/user.php'));
         });
     }
 }
