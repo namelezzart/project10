@@ -27,6 +27,7 @@ COPY . .
 
 # Устанавливаем зависимости
 RUN composer install --no-dev --optimize-autoloader
+
 RUN npm install && npm run build
 
 # Права доступа
