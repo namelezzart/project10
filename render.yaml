@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: project10
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    envVars:
+      - key: APP_NAME
+        value: project10
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        sync: false
+      - key: APP_URL
+        value: https://project10.onrender.com
+      - key: LOG_CHANNEL
+        value: stack
+      - key: LOG_LEVEL
+        value: error
+      - key: SESSION_DRIVER
+        value: file
+      - key: SESSION_COOKIE
+        value: app_session
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DATABASE_URL
+        fromDatabase:
+          name: project10-db
+          property: connectionString
+      - key: TOKEN
+        generateValue: true
+
+databases:
+  - name: project10-db
+    plan: free
+    databaseName: project10
+    user: project10
