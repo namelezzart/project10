@@ -7,13 +7,14 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libpq-dev \
     zip \
     unzip \
     nodejs \
     npm
 
-# Установка расширений PHP
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+# Установка расширений PHP (pdo_pgsql — проект использует Postgres)
+RUN docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd
 
 # Установка Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -31,8 +32,10 @@ RUN npm install && npm run build
 # Права доступа
 RUN chmod -R 775 storage bootstrap/cache
 
-# Порт
+# Порт (Render передаёт реальный порт через переменную $PORT)
 EXPOSE 8080
 
-# Запуск
-CMD php artisan serve --host=0.0.0.0 --port=8080
+# Запуск: прогоняем миграции и сидер при каждом старте контейнера
+# (файловая система на Render эфемерная, БД может пересоздаваться),
+# затем поднимаем сервер на порту, который выдал Render (или 8080 по умолчанию)
+CMD php artisan migrate --seed --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
