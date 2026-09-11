@@ -4,6 +4,11 @@
 
 @push('css')
     @include('components.post.card-styles')
+    @include('components.post.stagger-styles')
+@endpush
+
+@push('js')
+    @include('components.post.stagger-script')
 @endpush
 
 @section('main.content')
@@ -11,7 +16,12 @@
         {{ __('Blog list')}}
     </x-title>
 
-@include('blog.filter') 
+    @if($latestPosts->isNotEmpty())
+        <h2 class="h5 mb-3">{{ __('Latest posts') }}</h2>
+        <x-post.stagger :posts="$latestPosts" />
+    @endif
+
+@include('blog.filter')
 
     @if ($posts->isEmpty())
         <div class="text-center py-5">
