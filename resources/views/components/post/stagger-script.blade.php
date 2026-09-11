@@ -73,8 +73,17 @@
                 }
             }
 
+            let justSwiped = false;
+
             order.forEach((card) => {
-                card.addEventListener('click', () => activate(card));
+                card.addEventListener('click', (event) => {
+                    if (justSwiped) {
+                        justSwiped = false;
+                        event.preventDefault();
+                        return;
+                    }
+                    activate(card);
+                });
                 card.addEventListener('keydown', (event) => {
                     if (event.key === 'Enter' || event.key === ' ') {
                         event.preventDefault();
@@ -89,6 +98,53 @@
             if (nextBtn) {
                 nextBtn.addEventListener('click', () => move(1));
             }
+
+            // Swipe support (touch devices, mainly mobile).
+            const SWIPE_THRESHOLD = 40;
+            let touchStartX = null;
+            let touchStartY = null;
+            let touchIsHorizontal = false;
+
+            root.addEventListener('touchstart', (event) => {
+                if (event.touches.length !== 1) {
+                    return;
+                }
+                touchStartX = event.touches[0].clientX;
+                touchStartY = event.touches[0].clientY;
+                touchIsHorizontal = false;
+            }, { passive: true });
+
+            root.addEventListener('touchmove', (event) => {
+                if (touchStartX === null || event.touches.length !== 1) {
+                    return;
+                }
+                const dx = event.touches[0].clientX - touchStartX;
+                const dy = event.touches[0].clientY - touchStartY;
+                if (!touchIsHorizontal && Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) {
+                    touchIsHorizontal = true;
+                }
+                if (touchIsHorizontal && event.cancelable) {
+                    // Stop the page from scrolling while swiping the carousel horizontally.
+                    event.preventDefault();
+                }
+            }, { passive: false });
+
+            root.addEventListener('touchend', (event) => {
+                if (touchStartX === null) {
+                    return;
+                }
+                const touch = event.changedTouches && event.changedTouches[0];
+                const dx = touch ? touch.clientX - touchStartX : 0;
+
+                if (touchIsHorizontal && Math.abs(dx) >= SWIPE_THRESHOLD) {
+                    justSwiped = true;
+                    move(dx < 0 ? 1 : -1);
+                }
+
+                touchStartX = null;
+                touchStartY = null;
+                touchIsHorizontal = false;
+            });
 
             let resizeTimer;
             window.addEventListener('resize', () => {
