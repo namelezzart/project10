@@ -1,12 +1,23 @@
 <style>
+    .post-stagger-section {
+        margin-bottom: 1rem;
+    }
+
+    .post-section-divider {
+        margin: 2.5rem 0;
+        border: 0;
+        border-top: 1px solid var(--bs-border-color);
+        opacity: 0.35;
+    }
+
     .post-stagger {
         position: relative;
         width: 100%;
         overflow: hidden;
         height: 600px;
-        border-radius: 0.75rem;
-        background: var(--bs-tertiary-bg, var(--bs-secondary-bg));
-        margin-bottom: 2rem;
+        mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+        touch-action: pan-y;
     }
 
     @media (max-width: 639.98px) {
@@ -29,9 +40,9 @@
         cursor: pointer;
         padding: 2rem;
         border: 2px solid var(--bs-border-color);
-        background: var(--bs-body-bg);
+        background: var(--bs-secondary-bg);
         color: var(--bs-body-color);
-        transition: transform 0.5s ease-in-out, border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+        transition: transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1), border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
         clip-path: polygon(50px 0%, calc(100% - 50px) 0%, 100% 50px, 100% 100%, calc(100% - 50px) 100%, 50px 100%, 0 100%, 0 0);
         z-index: 0;
         outline: none;
@@ -78,7 +89,7 @@
         height: 3.5rem;
         margin-bottom: 1rem;
         font-size: 1.5rem;
-        background: var(--bs-secondary-bg);
+        background: var(--bs-tertiary-bg);
         color: var(--bs-body-color);
         box-shadow: 3px 3px 0px var(--bs-body-bg);
     }
