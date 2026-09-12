@@ -7,7 +7,7 @@ body:has(.row-cols-md-2) .container {
 }
 
 /* Theme toggle button styling */
-#theme-toggle {
+.theme-toggle-btn {
     font-size: 1.2rem;
     padding: 0.5rem;
     transition: transform 0.3s ease;
@@ -15,21 +15,21 @@ body:has(.row-cols-md-2) .container {
     background: transparent;
 }
 
-#theme-toggle:hover {
+.theme-toggle-btn:hover {
     transform: scale(1.1);
 }
 
-#theme-toggle:focus {
+.theme-toggle-btn:focus {
     box-shadow: none;
 }
 
 /* Icon colors */
-#theme-icon-light {
+.theme-icon-light {
     color: #ffc107;
     transition: opacity 0.3s ease;
 }
 
-#theme-icon-dark {
+.theme-icon-dark {
     color: #6c757d;
     transition: opacity 0.3s ease;
 }
@@ -46,8 +46,8 @@ body:has(.row-cols-md-2) .container {
     }
 }
 
-#theme-icon-light:not(.d-none),
-#theme-icon-dark:not(.d-none) {
+.theme-icon-light:not(.d-none),
+.theme-icon-dark:not(.d-none) {
     animation: rotate-in 0.3s ease;
 }
 
