@@ -58,37 +58,31 @@
                 document.body.setAttribute('data-bs-theme', theme);
                 updateThemeIcon(theme);
             };
-            
+
+            // There can be more than one toggle button on the page (e.g. a
+            // mobile one next to the menu button, and a desktop one in the
+            // navbar), so update every icon pair rather than a single id.
             const updateThemeIcon = theme => {
-                const lightIcon = document.getElementById('theme-icon-light');
-                const darkIcon = document.getElementById('theme-icon-dark');
-                
-                if (lightIcon && darkIcon) {
-                    if (theme === 'dark') {
-                        lightIcon.classList.add('d-none');
-                        darkIcon.classList.remove('d-none');
-                    } else {
-                        lightIcon.classList.remove('d-none');
-                        darkIcon.classList.add('d-none');
-                    }
-                }
+                const lightIcons = document.querySelectorAll('.theme-icon-light');
+                const darkIcons = document.querySelectorAll('.theme-icon-dark');
+
+                lightIcons.forEach(icon => icon.classList.toggle('d-none', theme === 'dark'));
+                darkIcons.forEach(icon => icon.classList.toggle('d-none', theme !== 'dark'));
             };
-            
+
             // Set theme on page load
             setTheme(getPreferredTheme());
-            
+
             // Theme toggle button click handler
             window.addEventListener('DOMContentLoaded', () => {
-                const toggleButton = document.getElementById('theme-toggle');
-                
-                if (toggleButton) {
+                document.querySelectorAll('.theme-toggle-btn').forEach(toggleButton => {
                     toggleButton.addEventListener('click', () => {
                         const currentTheme = document.documentElement.getAttribute('data-bs-theme');
                         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
                         setStoredTheme(newTheme);
                         setTheme(newTheme);
                     });
-                }
+                });
             });
             
             // Listen for system theme changes
